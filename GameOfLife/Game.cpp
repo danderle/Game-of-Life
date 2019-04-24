@@ -6,7 +6,6 @@ Game::Game(const unsigned int windowWidth, const unsigned int windowHeight, cons
 	pWindow = new sf::RenderWindow(sf::VideoMode(windowWidth, windowHeight), windowTitle);
 
 
-
 	mRect.setSize(sf::Vector2f(550.0f, 550.0f));
 	mRect.setFillColor(sf::Color::Transparent);
 	mRect.setOutlineColor(sf::Color::Green);
@@ -14,23 +13,28 @@ Game::Game(const unsigned int windowWidth, const unsigned int windowHeight, cons
 	mRect.setOrigin(sf::Vector2f(275.f, 275.f));
 	mRect.setPosition(sf::Vector2f((float)windowWidth / 2.f, (float)windowHeight / 2.f));
 
-	int yOffset = 0;
-	for (int x = 0; x < 100; x++)
+	int yOffset = -1;
+	for (int x = 0; x < 100
+; x++)
 	{
 		aCells[x].setSize(sf::Vector2f(55.f, 55.f));
 		aCells[x].setFillColor(sf::Color::Transparent);
 		aCells[x].setOutlineColor(sf::Color::Blue);
 		aCells[x].setOutlineThickness(-2.0f);
 		aCells[x].setOrigin(sf::Vector2f(55.0f/2.0f, 55.0f/2.0f));
-		float xOffset = (x % 10 + 1);
+		float xOffset = (x % 10);
 		if (x % 10 == 0)
 		{
 			yOffset++;
-			aCells[x].setPosition(sf::Vector2f(xOffset*(aCells[x].getSize().x) - 2.5f, yOffset*(aCells[x].getSize().y) - 2.5f));
+			float xPos = aCells[x].getOrigin().x + 25.f;
+			float yPos = aCells[x].getOrigin().y + 25.f + (yOffset*aCells[x].getSize().y);
+			aCells[x].setPosition(sf::Vector2f(xPos, yPos));
 		}
 		else
 		{
-			aCells[x].setPosition(sf::Vector2f(xOffset*(aCells[x].getSize().x) - 2.5f, yOffset*(aCells[x].getSize().y) - 2.5f));
+			float xPos = aCells[x].getOrigin().x + 25.f + (xOffset*aCells[x].getSize().x);
+			float yPos = aCells[x].getOrigin().y + 25.f + (yOffset*aCells[x].getSize().y);
+			aCells[x].setPosition(sf::Vector2f(xPos, yPos));
 		}
 	}
 }
@@ -52,11 +56,14 @@ void Game::Loop()
 			case sf::Event::Closed:
 				pWindow->close();
 				break;
+			case sf::Event::MouseButtonPressed:
+				
 			}
 		}
 
 		pWindow->clear();
 		pWindow->draw(mRect);
+		
 		for (auto cell : aCells)
 		{
 			pWindow->draw(cell);
