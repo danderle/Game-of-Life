@@ -1,5 +1,5 @@
 #include "Game.h"
-
+#include <iostream>
 
 Game::Game(const unsigned int windowWidth, const unsigned int windowHeight, const std::string &windowTitle)
 {
@@ -13,28 +13,26 @@ Game::Game(const unsigned int windowWidth, const unsigned int windowHeight, cons
 	mRect.setOrigin(sf::Vector2f(275.f, 275.f));
 	mRect.setPosition(sf::Vector2f((float)windowWidth / 2.f, (float)windowHeight / 2.f));
 
-	int yOffset = -1;
-	for (int x = 0; x < 100
-; x++)
+	
+	for (int y = 0; y < row; y++)
 	{
-		aCells[x].setSize(sf::Vector2f(55.f, 55.f));
-		aCells[x].setFillColor(sf::Color::Transparent);
-		aCells[x].setOutlineColor(sf::Color::Blue);
-		aCells[x].setOutlineThickness(-2.0f);
-		aCells[x].setOrigin(sf::Vector2f(55.0f/2.0f, 55.0f/2.0f));
-		float xOffset = (x % 10);
-		if (x % 10 == 0)
+		for (int x = 0; x < col; x++)
 		{
-			yOffset++;
-			float xPos = aCells[x].getOrigin().x + 25.f;
-			float yPos = aCells[x].getOrigin().y + 25.f + (yOffset*aCells[x].getSize().y);
-			aCells[x].setPosition(sf::Vector2f(xPos, yPos));
-		}
-		else
-		{
-			float xPos = aCells[x].getOrigin().x + 25.f + (xOffset*aCells[x].getSize().x);
-			float yPos = aCells[x].getOrigin().y + 25.f + (yOffset*aCells[x].getSize().y);
-			aCells[x].setPosition(sf::Vector2f(xPos, yPos));
+			aCells[col * y + x].setSize(sf::Vector2f(55.f, 55.f));
+			aCells[col * y + x].setFillColor(sf::Color::Transparent);
+			aCells[col * y + x].setFillColor(sf::Color::Transparent);
+			aCells[col * y + x].setOrigin(sf::Vector2f(55.0f / 2.0f, 55.0f / 2.0f));
+			
+			float xPos = aCells[col * y + x].getOrigin().x + 25.f + ((x - 1)*aCells[col * y + x].getSize().x);
+			float yPos = aCells[col * y + x].getOrigin().y + 25.f + ((y - 1)*aCells[col * y + x].getSize().y);
+			aCells[col * y + x].setPosition(sf::Vector2f(xPos, yPos));
+
+			//Walls are dead
+			if (y != 0 && y != row - 1 && x != 0 && x != col - 1)
+			{
+				aCells[col * y + x].setOutlineColor(sf::Color::Blue);
+				aCells[col * y + x].setOutlineThickness(2.f);
+			}
 		}
 	}
 }
@@ -56,10 +54,80 @@ void Game::Loop()
 			case sf::Event::Closed:
 				pWindow->close();
 				break;
-			case sf::Event::MouseButtonPressed:
-				
 			}
 		}
+
+		if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::LControl) && sf::Mouse::isButtonPressed(sf::Mouse::Left))
+		{
+			for (int y = 0; y < row; y++)
+			{
+				for (int x = 0; x < col; x++)
+				{
+
+					sf::Mouse mouse;
+					if (aCells[row * y + x].getGlobalBounds().contains(pWindow->mapPixelToCoords(sf::Mouse::getPosition(*pWindow))))
+					{
+						aCells[row * y + x].setFillColor(sf::Color::White);
+					}
+				}
+			}
+		}
+		else if (sf::Mouse::isButtonPressed(sf::Mouse::Left))
+		{
+			for (int y = 0; y < row; y++)
+			{
+				for (int x = 0; x < col; x++)
+				{
+					sf::Mouse mouse;
+					if (aCells[row * y + x].getGlobalBounds().contains(pWindow->mapPixelToCoords(sf::Mouse::getPosition(*pWindow))))
+					{
+						aCells[row * y + x].setFillColor(sf::Color::Transparent);
+					}
+				}
+			}
+		}
+
+		if (sf::Keyboard::isKeyPressed(sf::Keyboard::Enter))
+		{
+			for (int y = 1; y < row - 1; y++)
+			{
+				for (int x = 1; x < col - 1; x++)
+				{
+					int counter = 0;
+					counter += aCells[row * y + (x - 1)].getFillColor() == sf::Color::White ? 1 : 0;
+					counter += aCells[row * y + (x + 1)].getFillColor() == sf::Color::White ? 1 : 0;
+
+					counter += aCells[row * (y - 1) + (x - 1)].getFillColor() == sf::Color::White ? 1 : 0;
+					counter += aCells[row * (y + 1) + (x - 1)].getFillColor() == sf::Color::White ? 1 : 0;
+					counter += aCells[row * (y - 1) + x].getFillColor() == sf::Color::White ? 1 : 0;
+					counter += aCells[row * (y + 1) + x].getFillColor() == sf::Color::White ? 1 : 0;
+					counter += aCells[row * (y - 1) + (x + 1)].getFillColor() == sf::Color::White ? 1 : 0;
+					counter += aCells[row * (y + 1) + (x + 1)].getFillColor() == sf::Color::White ? 1 : 0;
+
+					aCounter[row * y + x] = counter;
+					
+				}
+			}
+
+			for (int y = 1; y < row - 1; y++)
+			{
+				for (int x = 1; x < col - 1; x++)
+				{
+					if (aCells[row * y + x].getFillColor() == sf::Color::White)
+					{
+						if (aCounter[row * y + x] < 2 || aCounter[row * y + x] > 3)
+							aCells[row * y + x].setFillColor(sf::Color::Transparent);
+					}
+					else
+					{
+						if (aCounter[row * y + x] == 3)
+							aCells[row * y + x].setFillColor(sf::Color::White);
+					}
+				}
+			}
+			sf::sleep(sf::milliseconds(100));
+		}
+
 
 		pWindow->clear();
 		pWindow->draw(mRect);
