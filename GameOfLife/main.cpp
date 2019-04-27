@@ -2,8 +2,8 @@
 #include <SFML/Graphics.hpp>
 #include "Game.h"
 
-#define WINDOW_WIDTH 600
-#define WINDOW_HEIGHT 600
+#define WINDOW_WIDTH 1250
+#define WINDOW_HEIGHT 900
 #define WINDOW_TITLE "Game Of Life"
 int main(void)
 {

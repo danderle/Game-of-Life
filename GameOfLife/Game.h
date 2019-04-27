@@ -1,5 +1,6 @@
 #pragma once
 #include <SFML/Graphics.hpp>
+#include "Grid.h"
 
 class Game
 {
@@ -12,14 +13,9 @@ public:
 
 
 private:
-	static constexpr int row = 12;
-	static constexpr int col = 12;
-
 	sf::RenderWindow *pWindow;
 	sf::RectangleShape mRect;
-	sf::RectangleShape aCells[row*col];
-	int aCounter[row*col];
-	sf::Clock clock;
 
+	Grid *pGrid;
 };
 
