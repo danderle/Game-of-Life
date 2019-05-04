@@ -1,21 +1,35 @@
 #pragma once
-#include <SFML/Graphics.hpp>
 #include "Grid.h"
+#include "State.h"
 
 class Game
 {
 public:
-	Game() = delete;
-	Game(const unsigned int windowWidth, const unsigned int windowHeight, const std::string &windowTitle);
-	~Game();
+	//Constructors and destructor
+	Game();
+	virtual ~Game();
 
-	void Loop();
+	//Methods
+	void UpdateDt();
+	void UpdateSFMLEvents();
+	void Update();
+	void Render();
+	void Run();
 
 
 private:
+	//Variables
 	sf::RenderWindow *pWindow;
-	sf::RectangleShape mRect;
+	sf::RectangleShape mFrame;
+	sf::Event sfEvent;
+	sf::Clock sfClock;
 
+	float dt;
 	Grid *pGrid;
+
+	//Initializers
+	void InitWindow(const unsigned int windowWidth, const unsigned int windowHeight, const std::string &windowTitle);
+	void InitFrame(const unsigned int windowWidth, const unsigned int windowHeight);
+	void InitGrid(const float frameWidth, const float frameHeight);
 };
 

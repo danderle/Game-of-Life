@@ -11,8 +11,8 @@ Grid::Grid(const float frameWidth, const float frameHeight, const float startPos
 	mText.setString("Alive: 0");
 	mText.setPosition(sf::Vector2f(25.f, 0));
 
-	mCol = static_cast<int>(frameWidth / mCellWidth + 2);
-	mRow = static_cast<int>(frameHeight / mCellHeight + 2);
+	mCol = static_cast<int>(frameWidth / mCellWidth);
+	mRow = static_cast<int>(frameHeight / mCellHeight);
 
 	for (int y = 0; y < mRow; y++)
 	{
@@ -25,16 +25,12 @@ Grid::Grid(const float frameWidth, const float frameHeight, const float startPos
 			vCells.back().setFillColor(sf::Color::Transparent);
 			vCells.back().setOrigin(sf::Vector2f(mCellWidth / 2.0f, mCellHeight / 2.0f));
 
-			float xPos = vCells.back().getOrigin().x + startPosX + ((x - 1)*vCells.back().getSize().x);
-			float yPos = vCells.back().getOrigin().y + startPosY + ((y - 1)*vCells.back().getSize().y);
+			float xPos = vCells.back().getOrigin().x + startPosX + (x*vCells.back().getSize().x);
+			float yPos = vCells.back().getOrigin().y + startPosY + (y*vCells.back().getSize().y);
 			vCells.back().setPosition(sf::Vector2f(xPos, yPos));
 
-			//Walls are dead
-			if (y != 0 && y != mRow - 1 && x != 0 && x != mCol - 1)
-			{
-				vCells.back().setOutlineColor(sf::Color::Blue);
-				vCells.back().setOutlineThickness(-1.f);
-			}
+			vCells.back().setOutlineColor(sf::Color::Blue);
+			vCells.back().setOutlineThickness(-1.f);
 		}
 	}
 } 
@@ -49,11 +45,12 @@ void Grid::Fill(sf::RenderWindow *window)
 	{
 		for (int x = 0; x < mCol; x++)
 		{
-			if (vCells.at(mCol * y + x).getGlobalBounds().contains(window->mapPixelToCoords(sf::Mouse::getPosition(*window))))
+			int index = mCol * y + x;
+			if (vCells.at(index).getGlobalBounds().contains(window->mapPixelToCoords(sf::Mouse::getPosition(*window))))
 			{
-				if (vCells.at(mCol * y + x).getFillColor() != sf::Color::White)
+				if (vCells.at(index).getFillColor() != sf::Color::White)
 				{
-					vCells.at(mCol * y + x).setFillColor(sf::Color::White);
+					vCells.at(index).setFillColor(sf::Color::White);
 					mLiveCount++;
 				}
 			}
@@ -68,11 +65,12 @@ void Grid::Erase(sf::RenderWindow *window)
 	{
 		for (int x = 0; x < mCol; x++)
 		{
-			if (vCells.at(mCol * y + x).getGlobalBounds().contains(window->mapPixelToCoords(sf::Mouse::getPosition(*window))))
+			int index = mCol * y + x;
+			if (vCells.at(index).getGlobalBounds().contains(window->mapPixelToCoords(sf::Mouse::getPosition(*window))))
 			{
-				if (vCells.at(mCol * y + x).getFillColor() != sf::Color::Transparent)
+				if (vCells.at(index).getFillColor() != sf::Color::Transparent)
 				{
-					vCells.at(mCol * y + x).setFillColor(sf::Color::Transparent);
+					vCells.at(index).setFillColor(sf::Color::Transparent);
 					mLiveCount--;
 				}
 			}
@@ -83,55 +81,92 @@ void Grid::Erase(sf::RenderWindow *window)
 
 void Grid::Update()
 {
-	for (int y = 1; y < mRow - 1; y++)
+	if (WallsDead == true)
 	{
-		for (int x = 1; x < mCol - 1; x++)
+		//Dead walls
+		for (int y = 0; y < mRow; y++)
 		{
-			int counter = 0;
-			counter += vCells[mCol * y + (x - 1)].getFillColor() == sf::Color::White ? 1 : 0;
-			counter += vCells[mCol * y + (x + 1)].getFillColor() == sf::Color::White ? 1 : 0;
-			counter += vCells[mCol * (y - 1) + (x - 1)].getFillColor() == sf::Color::White ? 1 : 0;
-			counter += vCells[mCol * (y + 1) + (x - 1)].getFillColor() == sf::Color::White ? 1 : 0;
-			counter += vCells[mCol * (y - 1) + x].getFillColor() == sf::Color::White ? 1 : 0;
-			counter += vCells[mCol * (y + 1) + x].getFillColor() == sf::Color::White ? 1 : 0;
-			counter += vCells[mCol * (y - 1) + (x + 1)].getFillColor() == sf::Color::White ? 1 : 0;
-			counter += vCells[mCol * (y + 1) + (x + 1)].getFillColor() == sf::Color::White ? 1 : 0;
+			for (int x = 0; x < mCol; x++)
+			{
+				int counter = 0;
+				if (x != 0)
+					counter += vCells[mCol * y + (x - 1)].getFillColor() == sf::Color::White ? 1 : 0;
+				if (y != 0)
+					counter += vCells[mCol * (y - 1) + x].getFillColor() == sf::Color::White ? 1 : 0;
+				if (x != mCol - 1)
+					counter += vCells[mCol * y + (x + 1)].getFillColor() == sf::Color::White ? 1 : 0;
+				if (y != mRow - 1)
+					counter += vCells[mCol * (y + 1) + x].getFillColor() == sf::Color::White ? 1 : 0;
+				if (y != 0 && x != 0)
+					counter += vCells[mCol * (y - 1) + (x - 1)].getFillColor() == sf::Color::White ? 1 : 0;
+				if (y != 0 && x != mCol - 1)
+					counter += vCells[mCol * (y - 1) + (x + 1)].getFillColor() == sf::Color::White ? 1 : 0;
+				if(x != 0 && y != mRow - 1)
+					counter += vCells[mCol * (y + 1) + (x - 1)].getFillColor() == sf::Color::White ? 1 : 0;
+				if(y != mRow - 1 && x != mCol - 1)
+					counter += vCells[mCol * (y + 1) + (x + 1)].getFillColor() == sf::Color::White ? 1 : 0;
 
-			vNeighborCount[mCol * y + x] = counter;
+				vNeighborCount[mCol * y + x] = counter;
+			}
+		}
+	}
+	else
+	{
+		for (int y = 0; y < mRow; y++)
+		{
+			for (int x = 0; x < mCol; x++)
+			{
+				int counter = 0;
+				counter += vCells[mCol * ((mRow + (y - 1)) % mRow) + x].getFillColor() == sf::Color::White ? 1 : 0;
+				counter += vCells[mCol * ((mRow + (y + 1)) % mRow) + x].getFillColor() == sf::Color::White ? 1 : 0;
+				counter += vCells[mCol * y + ((mCol + (x - 1)) % mCol)].getFillColor() == sf::Color::White ? 1 : 0;
+				counter += vCells[mCol * y + ((mCol + (x + 1)) % mCol)].getFillColor() == sf::Color::White ? 1 : 0;
+				counter += vCells[mCol * ((mRow + (y - 1)) % mRow) + ((mCol + (x - 1)) % mCol)].getFillColor() == sf::Color::White ? 1 : 0;
+				counter += vCells[mCol * ((mRow + (y + 1)) % mRow) + ((mCol + (x - 1)) % mCol)].getFillColor() == sf::Color::White ? 1 : 0;
+				counter += vCells[mCol * ((mRow + (y - 1)) % mRow) + ((mCol + (x + 1)) % mCol)].getFillColor() == sf::Color::White ? 1 : 0;
+				counter += vCells[mCol * ((mRow + (y + 1)) % mRow) + ((mCol + (x + 1)) % mCol)].getFillColor() == sf::Color::White ? 1 : 0;
+
+				vNeighborCount[mCol * y + x] = counter;
+			}
 		}
 	}
 
-	for (int y = 1; y < mRow - 1; y++)
+	for (int y = 0; y < mRow; y++)
 	{
-		for (int x = 1; x < mCol - 1; x++)
+		for (int x = 0; x < mCol; x++)
 		{
-			if (vCells[mCol * y + x].getFillColor() == sf::Color::White)
+			int index = mCol * y + x;
+			if (vCells[index].getFillColor() == sf::Color::White)
 			{
-				if (vNeighborCount[mCol * y + x] < 2 || vNeighborCount[mCol * y + x] > 3)
+				if (vNeighborCount[index] < 2 || vNeighborCount[index] > 3)
 				{
-					vCells[mCol * y + x].setFillColor(sf::Color::Transparent);
+					vCells[index].setFillColor(sf::Color::Transparent);
 					mLiveCount--;
 				}
 			}
 			else
 			{
-				if (vNeighborCount[mCol * y + x] == 3)
+				if (vNeighborCount[index] == 3)
 				{
-					vCells[mCol * y + x].setFillColor(sf::Color::White);
+					vCells[index].setFillColor(sf::Color::White);
 					mLiveCount++;
 				}
 			}
 		}
 	}
-	sf::sleep(sf::milliseconds(100));
+	sf::sleep(sf::milliseconds(50));
 	setText();
 }
 
 void Grid::Draw(sf::RenderWindow *window) const
 {
-	for (auto cell : vCells)
+	for (int y = 0; y < mRow; y++)
 	{
-		window->draw(cell);
+		for (int x = 0; x < mCol; x++)
+		{
+			int index = mCol * y + x;
+			window->draw(vCells.at(index));
+		}
 	}
 	window->draw(mText);
 }
