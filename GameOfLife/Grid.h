@@ -1,4 +1,5 @@
 #pragma once
+#include <iostream>
 #include <SFML/Graphics.hpp>
 #include <vector>
 
@@ -22,6 +23,7 @@ private:
 	int mCol;
 	int mRow;
 	unsigned int mLiveCount = 0;
+	const bool WallsDead = true;
 	std::vector<sf::RectangleShape> vCells;
 	std::vector<int> vNeighborCount;
 	sf::Font mFont;
