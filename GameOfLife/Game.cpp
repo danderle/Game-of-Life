@@ -1,13 +1,30 @@
 #include "Game.h"
 
-#define WINDOW_WIDTH 850
-#define WINDOW_HEIGHT 850
-#define WINDOW_TITLE "Game Of Life"
 Game::Game()
 {
-	InitWindow(WINDOW_WIDTH, WINDOW_HEIGHT, WINDOW_TITLE);
-	InitFrame(pWindow->getSize().x, pWindow->getSize().y);
+
+	std::ifstream fileInput("Config/window.ini");
+
+	std::string title = "Need Title";
+	sf::VideoMode windowSize(850, 850);
+	unsigned int framerateLimit = 120;
+	bool verticalSyncEnabled = false;
+
+	if (fileInput.is_open())
+	{
+		std::getline(fileInput, title);
+		fileInput >> windowSize.width >> windowSize.height;
+		fileInput >> framerateLimit;
+		fileInput >> verticalSyncEnabled;
+	}
+	InitWindow(windowSize.width, windowSize.height, title);
+	pWindow->setFramerateLimit(framerateLimit);
+	pWindow->setVerticalSyncEnabled(verticalSyncEnabled);
+
+	InitFrame(windowSize.width, windowSize.height);
 	InitGrid(mFrame.getGlobalBounds().width, mFrame.getGlobalBounds().height);
+
+	
 }
 
 Game::~Game()
