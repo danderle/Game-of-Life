@@ -28,7 +28,7 @@ private:
 	Grid *pGrid;
 
 	//Initializers
-	void InitWindow(const unsigned int windowWidth, const unsigned int windowHeight, const std::string &windowTitle);
+	void InitWindow();
 	void InitFrame(const unsigned int windowWidth, const unsigned int windowHeight);
 	void InitGrid(const float frameWidth, const float frameHeight);
 };

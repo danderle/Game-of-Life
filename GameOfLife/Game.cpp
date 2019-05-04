@@ -1,32 +1,14 @@
 #include "Game.h"
 
+//Constructor
 Game::Game()
 {
-
-	std::ifstream fileInput("Config/window.ini");
-
-	std::string title = "Need Title";
-	sf::VideoMode windowSize(850, 850);
-	unsigned int framerateLimit = 120;
-	bool verticalSyncEnabled = false;
-
-	if (fileInput.is_open())
-	{
-		std::getline(fileInput, title);
-		fileInput >> windowSize.width >> windowSize.height;
-		fileInput >> framerateLimit;
-		fileInput >> verticalSyncEnabled;
-	}
-	InitWindow(windowSize.width, windowSize.height, title);
-	pWindow->setFramerateLimit(framerateLimit);
-	pWindow->setVerticalSyncEnabled(verticalSyncEnabled);
-
-	InitFrame(windowSize.width, windowSize.height);
+	InitWindow();
+	InitFrame(pWindow->getSize().x, pWindow->getSize().y);
 	InitGrid(mFrame.getGlobalBounds().width, mFrame.getGlobalBounds().height);
-
-	
 }
 
+//Destructor
 Game::~Game()
 {
 	delete pWindow;
@@ -35,11 +17,13 @@ Game::~Game()
 	pGrid = nullptr;
 }
 
+//Gets elapsed time and restarts the clock, used for framerate independent gameplay
 void Game::UpdateDt()
 {
 	dt = sfClock.restart().asSeconds();
 }
 
+//Handles all SFML events
 void Game::UpdateSFMLEvents()
 {
 	while (pWindow->pollEvent(sfEvent))
@@ -53,6 +37,7 @@ void Game::UpdateSFMLEvents()
 	}
 }
 
+//Handles all input and events
 void Game::Update()
 {
 	UpdateSFMLEvents();
@@ -73,6 +58,7 @@ void Game::Update()
 	}
 }
 
+//Draws to the window
 void Game::Render()
 {
 	pWindow->clear();
@@ -81,6 +67,7 @@ void Game::Render()
 	pWindow->display();
 }
 
+//Runs the game loop
 void Game::Run()
 {
 	while (pWindow->isOpen())
@@ -91,11 +78,30 @@ void Game::Run()
 	}
 }
 
-void Game::InitWindow(const unsigned int windowWidth, const unsigned int windowHeight, const std::string &windowTitle)
+//Creates the window from a config file
+void Game::InitWindow()
 {
-	pWindow = new sf::RenderWindow(sf::VideoMode(windowWidth, windowHeight), windowTitle);
+	std::ifstream fileInput("Config/window.ini");
+
+	std::string title = "Need Title";
+	sf::VideoMode windowSize(850, 850);
+	unsigned int framerateLimit = 120;
+	bool verticalSyncEnabled = false;
+
+	if (fileInput.is_open())
+	{
+		std::getline(fileInput, title);
+		fileInput >> windowSize.width >> windowSize.height;
+		fileInput >> framerateLimit;
+		fileInput >> verticalSyncEnabled;
+	}
+
+	pWindow = new sf::RenderWindow(windowSize, title);
+	pWindow->setFramerateLimit(framerateLimit);
+	pWindow->setVerticalSyncEnabled(verticalSyncEnabled);
 }
 
+//Initilizes the frame around the game field
 void Game::InitFrame(const unsigned int windowWidth, const unsigned int windowHeight)
 {
 	float frameWidth = windowWidth - 50.f;
@@ -108,6 +114,7 @@ void Game::InitFrame(const unsigned int windowWidth, const unsigned int windowHe
 	mFrame.setPosition(sf::Vector2f((float)windowWidth / 2.f, (float)windowHeight / 2.f + 25.f));
 }
 
+//Initializes the game field or grid
 void Game::InitGrid(const float frameWidth, const float frameHeight)
 {
 	float startX = 50.f / 2.f;
