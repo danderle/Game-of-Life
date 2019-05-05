@@ -1,11 +1,11 @@
 #include "State.h"
 
 
-
-State::State()
+State::State(sf::RenderWindow * window)
+	:
+	pWindow(window)
 {
 }
-
 
 State::~State()
 {

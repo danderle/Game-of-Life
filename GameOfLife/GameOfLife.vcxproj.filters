@@ -31,7 +31,7 @@
       <Filter>States</Filter>
     </ClCompile>
     <ClCompile Include="GameState.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>States</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -45,7 +45,7 @@
       <Filter>States</Filter>
     </ClInclude>
     <ClInclude Include="GameState.h">
-      <Filter>Header Files</Filter>
+      <Filter>States</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

@@ -1,6 +1,6 @@
 #pragma once
 #include "Grid.h"
-#include "State.h"
+#include "GameState.h"
 
 class Game
 {
@@ -24,11 +24,13 @@ private:
 	sf::Event sfEvent;
 	sf::Clock sfClock;
 
-	float dt;
+	float mDt;
 	Grid *pGrid;
+	std::stack<State*> sStates;
 
 	//Initializers
 	void InitWindow();
+	void InitStates();
 	void InitFrame(const unsigned int windowWidth, const unsigned int windowHeight);
 	void InitGrid(const float frameWidth, const float frameHeight);
 };

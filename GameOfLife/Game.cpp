@@ -4,6 +4,7 @@
 Game::Game()
 {
 	InitWindow();
+	InitStates();
 	InitFrame(pWindow->getSize().x, pWindow->getSize().y);
 	InitGrid(mFrame.getGlobalBounds().width, mFrame.getGlobalBounds().height);
 }
@@ -13,6 +14,13 @@ Game::~Game()
 {
 	delete pWindow;
 	pWindow = nullptr;
+
+	while (!sStates.empty())
+	{
+		delete sStates.top();
+		sStates.pop();
+	}
+
 	delete pGrid;
 	pGrid = nullptr;
 }
@@ -20,7 +28,7 @@ Game::~Game()
 //Gets elapsed time and restarts the clock, used for framerate independent gameplay
 void Game::UpdateDt()
 {
-	dt = sfClock.restart().asSeconds();
+	mDt = sfClock.restart().asSeconds();
 }
 
 //Handles all SFML events
@@ -42,6 +50,11 @@ void Game::Update()
 {
 	UpdateSFMLEvents();
 
+	if (!sStates.empty())
+	{
+		sStates.top()->Update(mDt);
+	}
+
 	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::LControl) && sf::Mouse::isButtonPressed(sf::Mouse::Left))
 	{
 		pGrid->Fill(pWindow);
@@ -62,8 +75,14 @@ void Game::Update()
 void Game::Render()
 {
 	pWindow->clear();
-	pWindow->draw(mFrame);
+
+	//Render items
+	if (!sStates.empty())
+	{
+		sStates.top()->Draw(pWindow);
+	}
 	pGrid->Draw(pWindow);
+	pWindow->draw(mFrame);
 	pWindow->display();
 }
 
@@ -99,6 +118,11 @@ void Game::InitWindow()
 	pWindow = new sf::RenderWindow(windowSize, title);
 	pWindow->setFramerateLimit(framerateLimit);
 	pWindow->setVerticalSyncEnabled(verticalSyncEnabled);
+}
+
+void Game::InitStates()
+{
+	sStates.push(new GameState(pWindow));
 }
 
 //Initilizes the frame around the game field
