@@ -8,6 +8,7 @@ public:
 	virtual ~GameState();
 
 	void EndState();
+	void UpdateKeybinds(const float dt = 0);
 	void Update(const float dt);
 	void Draw(sf::RenderTarget *target = nullptr);
 };

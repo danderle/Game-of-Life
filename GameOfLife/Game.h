@@ -13,7 +13,7 @@ public:
 	void UpdateDt();
 	void UpdateSFMLEvents();
 	void Update();
-	void Render();
+	void Draw();
 	void Run();
 
 

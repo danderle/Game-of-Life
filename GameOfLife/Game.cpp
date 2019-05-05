@@ -25,6 +25,8 @@ Game::~Game()
 	pGrid = nullptr;
 }
 
+//Public Methods
+
 //Gets elapsed time and restarts the clock, used for framerate independent gameplay
 void Game::UpdateDt()
 {
@@ -50,9 +52,21 @@ void Game::Update()
 {
 	UpdateSFMLEvents();
 
+	//TODO Not yet used
 	if (!sStates.empty())
 	{
 		sStates.top()->Update(mDt);
+		if (sStates.top()->GetQuit())
+		{
+			sStates.top()->EndState();
+			delete sStates.top();
+			sStates.pop();
+		}
+	}
+	//Application End
+	else
+	{
+		pWindow->close();
 	}
 
 	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::LControl) && sf::Mouse::isButtonPressed(sf::Mouse::Left))
@@ -72,7 +86,7 @@ void Game::Update()
 }
 
 //Draws to the window
-void Game::Render()
+void Game::Draw()
 {
 	pWindow->clear();
 
@@ -93,9 +107,11 @@ void Game::Run()
 	{
 		UpdateDt();
 		Update();
-		Render();
+		Draw();
 	}
 }
+
+//Private Methods
 
 //Creates the window from a config file
 void Game::InitWindow()
@@ -120,6 +136,7 @@ void Game::InitWindow()
 	pWindow->setVerticalSyncEnabled(verticalSyncEnabled);
 }
 
+//Creates new States
 void Game::InitStates()
 {
 	sStates.push(new GameState(pWindow));
