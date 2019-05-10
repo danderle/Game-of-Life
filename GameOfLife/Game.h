@@ -1,6 +1,7 @@
 #pragma once
 #include "Grid.h"
 #include "GameState.h"
+#include "MainMenuState.h"
 
 class Game
 {

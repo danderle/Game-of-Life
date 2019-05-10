@@ -15,7 +15,7 @@ State::~State()
 
 void State::CheckForQuit()
 {
-	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Escape))
+	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key(maKeyBinds.at("Quit"))))
 		mQuit = true;
 }
 

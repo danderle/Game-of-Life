@@ -126,5 +126,5 @@ void Game::InitInputKeys()
 //Creates new States
 void Game::InitStates()
 {
-	sStates.push(new GameState(pWindow, &maInputKeys));
+	sStates.push(new MainMenuState(pWindow, &maInputKeys));
 }
