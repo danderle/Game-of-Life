@@ -4,9 +4,8 @@
 Game::Game()
 {
 	InitWindow();
-	InitStates();
 	InitInputKeys();
-	InitInputMouse();
+	InitStates();
 }
 
 //Destructor
@@ -124,14 +123,8 @@ void Game::InitInputKeys()
 	maInputKeys.emplace("Left", sf::Mouse::Left);
 }
 
-void Game::InitInputMouse()
-{
-	maInputMouse.emplace("Left", sf::Mouse::Left);
-}
-
-
 //Creates new States
 void Game::InitStates()
 {
-	sStates.push(new GameState(pWindow));
+	sStates.push(new GameState(pWindow, &maInputKeys));
 }

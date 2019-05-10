@@ -11,7 +11,7 @@ class State
 {
 public:
 	State() = delete;
-	State(sf::RenderWindow *window);
+	State(sf::RenderWindow *window, std::map<std::string, unsigned int>* inputKeys);
 	virtual ~State();
 
 	virtual void EndState() = 0;
@@ -24,8 +24,13 @@ public:
 	const bool GetQuit() const;
 
 protected:
+	virtual void InitKeyBinds() = 0;
+
 	std::vector<sf::Texture> vTextures;
 	sf::RenderWindow *pWindow;
+
+	std::map<std::string, unsigned int> *maInputKeys;
+	std::map<std::string, unsigned int> maKeyBinds;
 
 	bool mQuit;
 };

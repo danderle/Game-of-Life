@@ -5,7 +5,7 @@
 class GameState : public State
 {
 public:
-	GameState(sf::RenderWindow *window);
+	GameState(sf::RenderWindow *window, std::map<std::string, unsigned int>* inputKeys);
 	virtual ~GameState();
 
 	void EndState();
@@ -16,7 +16,7 @@ public:
 private:
 	void InitFrame(const unsigned int windowWidth, const unsigned int windowHeight);
 	void InitGrid(const float frameWidth, const float frameHeight);
-
+	void InitKeyBinds();
 	sf::RectangleShape mFrame;
 	Grid *pGrid = nullptr;
 };

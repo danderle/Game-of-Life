@@ -26,12 +26,10 @@ private:
 	float mDt;
 	std::stack<State*> sStates;
 	std::map<std::string, unsigned int> maInputKeys;
-	std::map<std::string, unsigned int> maInputMouse;
 
 	//Initializers
 	void InitWindow();
 	void InitInputKeys();
-	void InitInputMouse();
 	void InitStates();
 };
 

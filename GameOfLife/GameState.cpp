@@ -1,10 +1,11 @@
 #include "GameState.h"
 
 
-GameState::GameState(sf::RenderWindow *window)
+GameState::GameState(sf::RenderWindow *window, std::map<std::string, unsigned>* inputKeys)
 	:
-	State(window)
+	State(window, inputKeys)
 {
+	InitKeyBinds();
 	InitFrame(pWindow->getSize().x, pWindow->getSize().y);
 	InitGrid(mFrame.getGlobalBounds().width, mFrame.getGlobalBounds().height);
 }
@@ -24,17 +25,17 @@ void GameState::UpdateInput(const float dt)
 {
 	CheckForQuit();
 
-	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::LControl) && sf::Mouse::isButtonPressed(sf::Mouse::Left))
+	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key(maKeyBinds.at("LControl"))) && sf::Mouse::isButtonPressed(sf::Mouse::Button(maKeyBinds.at("Left_Mouse"))))
 	{
 		pGrid->Fill(pWindow);
 	}
-	else if (sf::Mouse::isButtonPressed(sf::Mouse::Left))
+	else if (sf::Mouse::isButtonPressed(sf::Mouse::Button(maKeyBinds.at("Left_Mouse"))))
 	{
 		pGrid->Erase(pWindow);
 	}
 
 	//Press Enter to update the grid
-	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Enter))
+	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key(maKeyBinds.at("Update_Grid"))))
 	{
 		pGrid->Update();
 	}
@@ -71,4 +72,12 @@ void GameState::InitGrid(const float frameWidth, const float frameHeight)
 	float startX = 50.f / 2.f;
 	float startY = 75.f;
 	pGrid = new Grid(frameWidth, frameHeight, startX, startY);
+}
+
+void GameState::InitKeyBinds()
+{
+	maKeyBinds.emplace("Update_Grid", maInputKeys->at("Enter"));
+	maKeyBinds.emplace("Left_Mouse", maInputKeys->at("Left"));
+	maKeyBinds.emplace("Quit", maInputKeys->at("Escape"));
+	maKeyBinds.emplace("LControl", maInputKeys->at("LControl"));
 }
