@@ -15,15 +15,15 @@ public:
 	virtual ~State();
 
 	virtual void EndState() = 0;
-	virtual void UpdateKeybinds(const float dt = 0) = 0;
+	virtual void UpdateInput(const float dt = 0) = 0;
 	virtual void Update(const float dt) = 0;
-	virtual void Draw(sf::RenderTarget *target = nullptr) = 0;
+	virtual void Draw(sf::RenderWindow *window = nullptr) = 0;
 
 	virtual void CheckForQuit();
 
 	const bool GetQuit() const;
 
-private:
+protected:
 	std::vector<sf::Texture> vTextures;
 	sf::RenderWindow *pWindow;
 

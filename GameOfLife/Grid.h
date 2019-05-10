@@ -23,7 +23,7 @@ private:
 	int mCol;
 	int mRow;
 	unsigned int mLiveCount = 0;
-	const bool WallsDead = true;
+	const bool WallsDead = false;
 	std::vector<sf::RectangleShape> vCells;
 	std::vector<int> vNeighborCount;
 	sf::Font mFont;

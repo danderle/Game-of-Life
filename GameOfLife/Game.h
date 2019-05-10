@@ -20,18 +20,18 @@ public:
 private:
 	//Variables
 	sf::RenderWindow *pWindow;
-	sf::RectangleShape mFrame;
 	sf::Event sfEvent;
 	sf::Clock sfClock;
 
 	float mDt;
-	Grid *pGrid;
 	std::stack<State*> sStates;
+	std::map<std::string, unsigned int> maInputKeys;
+	std::map<std::string, unsigned int> maInputMouse;
 
 	//Initializers
 	void InitWindow();
+	void InitInputKeys();
+	void InitInputMouse();
 	void InitStates();
-	void InitFrame(const unsigned int windowWidth, const unsigned int windowHeight);
-	void InitGrid(const float frameWidth, const float frameHeight);
 };
 
