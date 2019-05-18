@@ -15,6 +15,7 @@ public:
 	virtual ~State();
 
 	virtual void EndState() = 0;
+	virtual void UpdateMousePosition();
 	virtual void UpdateInput(const float dt = 0) = 0;
 	virtual void Update(const float dt) = 0;
 	virtual void Draw(sf::RenderWindow *window = nullptr) = 0;
@@ -28,6 +29,10 @@ protected:
 
 	std::vector<sf::Texture> vTextures;
 	sf::RenderWindow *pWindow;
+	sf::Vector2i mMousePosScreen;
+	sf::Vector2i mMousePosWindow;
+	sf::Vector2f mMousePosView;
+
 
 	std::map<std::string, unsigned int> *maInputKeys;
 	std::map<std::string, unsigned int> maKeyBinds;

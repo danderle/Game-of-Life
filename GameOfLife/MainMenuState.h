@@ -1,5 +1,8 @@
 #pragma once
 #include "State.h"
+
+#define FONT_FILEPATH "Fonts/Montserrat-Regular.ttf"
+
 class MainMenuState : public State
 {
 public:
@@ -15,5 +18,9 @@ public:
 private:
 	void InitFrame(const unsigned int windowWidth, const unsigned int windowHeight);
 	void InitKeyBinds();
+	void InitFonts();
+
+	sf::Font mFont;
+	sf::Text mText;
 };
 

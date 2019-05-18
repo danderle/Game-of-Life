@@ -13,6 +13,13 @@ State::~State()
 {
 }
 
+void State::UpdateMousePosition()
+{
+	mMousePosScreen = sf::Mouse::getPosition();
+	mMousePosWindow = sf::Mouse::getPosition(*pWindow);
+	mMousePosView = pWindow->mapPixelToCoords(sf::Mouse::getPosition(*pWindow));
+}
+
 void State::CheckForQuit()
 {
 	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key(maKeyBinds.at("Quit"))))

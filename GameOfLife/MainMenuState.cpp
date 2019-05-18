@@ -22,6 +22,7 @@ void MainMenuState::UpdateInput(const float dt)
 
 void MainMenuState::Update(const float dt)
 {
+	UpdateMousePosition();
 }
 
 void MainMenuState::Draw(sf::RenderWindow * window)
@@ -37,4 +38,14 @@ void MainMenuState::InitFrame(const unsigned int windowWidth, const unsigned int
 
 void MainMenuState::InitKeyBinds()
 {
+}
+
+void MainMenuState::InitFonts()
+{
+	
+	if (!mFont.loadFromFile(FONT_FILEPATH))
+	{
+		throw("Main Menu could not load font");
+	}
+	mText.setFont(mFont);
 }

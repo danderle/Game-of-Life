@@ -44,6 +44,7 @@ void GameState::UpdateInput(const float dt)
 
 void GameState::Update(const float dt)
 {
+	UpdateMousePosition();
 	UpdateInput(dt);
 }
 
