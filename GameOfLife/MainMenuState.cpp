@@ -5,10 +5,17 @@ MainMenuState::MainMenuState(sf::RenderWindow * window, std::map<std::string, un
 	State(window, inputKeys)
 {
 	InitKeyBinds();
+	InitFonts();
+	InitButtons();
 }
 
 MainMenuState::~MainMenuState()
 {
+	for (auto &button : mButtons)
+	{
+		delete button.second;
+		button.second = nullptr;
+	}
 }
 
 void MainMenuState::EndState()
@@ -18,11 +25,34 @@ void MainMenuState::EndState()
 void MainMenuState::UpdateInput(const float dt)
 {
 	CheckForQuit();
+	
+}
+
+void MainMenuState::UpdateButtons()
+{
+	for (auto &it : mButtons)
+	{
+		it.second->Update(mMousePosView);
+	}
+
+	//Quit game
+	if (mButtons.at("GAME_STATE")->IsPressed())
+	{
+		mQuit = true;
+	}
+
+	//Quit game
+	if (mButtons.at("EXIT_STATE")->IsPressed())
+	{
+		mQuit = true;
+	}
 }
 
 void MainMenuState::Update(const float dt)
 {
 	UpdateMousePosition();
+	UpdateInput(dt);
+	UpdateButtons();
 }
 
 void MainMenuState::Draw(sf::RenderWindow * window)
@@ -30,6 +60,15 @@ void MainMenuState::Draw(sf::RenderWindow * window)
 	if (!window)
 		window = pWindow;
 	window->clear(sf::Color::Magenta);
+	DrawButtons(window);
+}
+
+void MainMenuState::DrawButtons(sf::RenderWindow * window)
+{
+	for (auto &it : mButtons)
+	{
+		it.second->Draw(window);
+	}
 }
 
 void MainMenuState::InitFrame(const unsigned int windowWidth, const unsigned int windowHeight)
@@ -38,6 +77,7 @@ void MainMenuState::InitFrame(const unsigned int windowWidth, const unsigned int
 
 void MainMenuState::InitKeyBinds()
 {
+	maKeyBinds.emplace("Quit", maInputKeys->at("Escape"));
 }
 
 void MainMenuState::InitFonts()
@@ -48,4 +88,12 @@ void MainMenuState::InitFonts()
 		throw("Main Menu could not load font");
 	}
 	mText.setFont(mFont);
+}
+
+void MainMenuState::InitButtons()
+{
+	mButtons["GAME_STATE"] = new Button(100, 100, 150, 50, &mFont, "New Game",
+		sf::Color(0, 255, 0), sf::Color(0, 0, 255), sf::Color::Black);
+	mButtons["EXIT_STATE"] = new Button(100, 300, 150, 50, &mFont, "Quit",
+		sf::Color(100, 100, 100), sf::Color(150, 150, 150), sf::Color::Black);
 }
