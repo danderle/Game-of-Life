@@ -20,10 +20,10 @@ public:
 
 private:
 	//Variables
-	sf::RenderWindow *pWindow;
+	sf::RenderWindow *pWindow = nullptr;
 	sf::Event sfEvent;
 	sf::Clock sfClock;
-
+	std::vector<sf::VideoMode> vVideoModes;
 	float mDt;
 	std::stack<State*> sStates;
 	std::map<std::string, unsigned int> maInputKeys;

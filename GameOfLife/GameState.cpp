@@ -1,9 +1,9 @@
 #include "GameState.h"
 
 
-GameState::GameState(sf::RenderWindow *window, std::map<std::string, unsigned>* inputKeys)
+GameState::GameState(sf::RenderWindow *window, std::map<std::string, unsigned>* inputKeys, std::stack<State*> *states)
 	:
-	State(window, inputKeys)
+	State(window, inputKeys, states)
 {
 	InitKeyBinds();
 	InitFrame(pWindow->getSize().x, pWindow->getSize().y);
@@ -17,14 +17,8 @@ GameState::~GameState()
 	pGrid = nullptr;
 }
 
-void GameState::EndState()
-{
-}
-
 void GameState::UpdateInput(const float dt)
 {
-	CheckForQuit();
-
 	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key(maKeyBinds.at("LControl"))) && sf::Mouse::isButtonPressed(sf::Mouse::Button(maKeyBinds.at("Left_Mouse"))))
 	{
 		pGrid->Fill(pWindow);
@@ -39,6 +33,9 @@ void GameState::UpdateInput(const float dt)
 	{
 		pGrid->Update();
 	}
+
+	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key(maKeyBinds.at("Quit"))))
+		EndState();
 
 }
 

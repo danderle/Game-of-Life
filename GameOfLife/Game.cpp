@@ -97,20 +97,32 @@ void Game::InitWindow()
 {
 	std::ifstream fileInput("Config/window.ini");
 
+	vVideoModes = sf::VideoMode::getFullscreenModes();
+
 	std::string title = "Need Title";
-	sf::VideoMode windowSize(850, 850);
+	sf::VideoMode windowSize = sf::VideoMode::getDesktopMode();
+	bool fullscreen = false;
 	unsigned int framerateLimit = 120;
 	bool verticalSyncEnabled = false;
+	unsigned antialiasingLevel = 0;
+
 
 	if (fileInput.is_open())
 	{
 		std::getline(fileInput, title);
 		fileInput >> windowSize.width >> windowSize.height;
+		fileInput >> fullscreen;
 		fileInput >> framerateLimit;
 		fileInput >> verticalSyncEnabled;
+		fileInput >> antialiasingLevel;
 	}
-
-	pWindow = new sf::RenderWindow(windowSize, title);
+	fileInput.close();
+	sf::ContextSettings windowSettings;
+	windowSettings.antialiasingLevel = antialiasingLevel;
+	if (fullscreen)
+		pWindow = new sf::RenderWindow(windowSize, title, sf::Style::Fullscreen, windowSettings);
+	else
+		pWindow = new sf::RenderWindow(windowSize, title, sf::Style::Titlebar | sf::Style::Close, windowSettings);
 	pWindow->setFramerateLimit(framerateLimit);
 	pWindow->setVerticalSyncEnabled(verticalSyncEnabled);
 }
@@ -126,5 +138,5 @@ void Game::InitInputKeys()
 //Creates new States
 void Game::InitStates()
 {
-	sStates.push(new MainMenuState(pWindow, &maInputKeys));
+	sStates.push(new MainMenuState(pWindow, &maInputKeys, &sStates));
 }

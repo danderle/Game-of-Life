@@ -1,8 +1,8 @@
 #include "MainMenuState.h"
 
-MainMenuState::MainMenuState(sf::RenderWindow * window, std::map<std::string, unsigned int>* inputKeys)
+MainMenuState::MainMenuState(sf::RenderWindow * window, std::map<std::string, unsigned int>* inputKeys, std::stack<State*> *states)
 	:
-	State(window, inputKeys)
+	State(window, inputKeys, states)
 {
 	InitKeyBinds();
 	InitFonts();
@@ -18,13 +18,9 @@ MainMenuState::~MainMenuState()
 	}
 }
 
-void MainMenuState::EndState()
-{
-}
 
 void MainMenuState::UpdateInput(const float dt)
 {
-	CheckForQuit();
 	
 }
 
@@ -35,10 +31,10 @@ void MainMenuState::UpdateButtons()
 		it.second->Update(mMousePosView);
 	}
 
-	//Quit game
+	//New Game
 	if (mButtons.at("GAME_STATE")->IsPressed())
 	{
-		mQuit = true;
+		sStates->push(new GameState(pWindow, maInputKeys, sStates));
 	}
 
 	//Quit game
@@ -92,8 +88,12 @@ void MainMenuState::InitFonts()
 
 void MainMenuState::InitButtons()
 {
-	mButtons["GAME_STATE"] = new Button(100, 100, 150, 50, &mFont, "New Game",
+	mButtons["GAME_STATE"] = new Button(100, 100, 200, 150, &mFont, "New Game",
 		sf::Color(0, 255, 0), sf::Color(0, 0, 255), sf::Color::Black);
-	mButtons["EXIT_STATE"] = new Button(100, 300, 150, 50, &mFont, "Quit",
+
+	mButtons["SETTINGS_STATE"] = new Button(100, 300, 200, 150, &mFont, "Settings",
+		sf::Color(0, 255, 0), sf::Color(0, 0, 255), sf::Color::Black);
+
+	mButtons["EXIT_STATE"] = new Button(100, 500, 200, 150, &mFont, "Quit",
 		sf::Color(100, 100, 100), sf::Color(150, 150, 150), sf::Color::Black);
 }

@@ -5,10 +5,9 @@
 class GameState : public State
 {
 public:
-	GameState(sf::RenderWindow *window, std::map<std::string, unsigned int>* inputKeys);
+	GameState(sf::RenderWindow *window, std::map<std::string, unsigned int>* inputKeys, std::stack<State*> *states);
 	virtual ~GameState();
 
-	void EndState();
 	void UpdateInput(const float dt = 0);
 	void Update(const float dt);
 	void Draw(sf::RenderWindow *window = nullptr);

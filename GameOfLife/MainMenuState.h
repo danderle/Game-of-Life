@@ -1,17 +1,16 @@
 #pragma once
 #include "State.h"
 #include "Button.h"
-
+#include "GameState.h"
 #define FONT_FILEPATH "Fonts/Montserrat-Regular.ttf"
 
 class MainMenuState : public State
 {
 public:
 	MainMenuState() = delete;
-	MainMenuState(sf::RenderWindow *window, std::map<std::string, unsigned int>* inputKeys);
+	MainMenuState(sf::RenderWindow *window, std::map<std::string, unsigned int>* inputKeys, std::stack<State*> *states);
 	virtual ~MainMenuState();
 
-	void EndState();
 	void UpdateInput(const float dt = 0);
 	void UpdateButtons();
 	void Update(const float dt);
