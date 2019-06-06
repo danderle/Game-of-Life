@@ -1,24 +1,30 @@
 #include "Button.h"
 
-Button::Button(float x, float y, float width, float height, sf::Font * font, std::string text, sf::Color idleColor, sf::Color hoverColor, sf::Color activeColor)
+Button::Button(float x, float y, float width, float height,
+	sf::Font* font, std::string text, unsigned int textSize,
+	sf::Color textIdleColor, sf::Color textHoverColor, sf::Color textActiveColor,
+	sf::Color buttonIdleColor, sf::Color buttonHoverColor, sf::Color buttonActiveColor)
 	:
 	mButtonState(BTN_IDLE),
 	pFont(font),
-	mIdleColor(idleColor),
-	mHoverColor(hoverColor),
-	mActiveColor(activeColor)
+	mTextIdleColor(textIdleColor),
+	mTextHoverColor(textHoverColor),
+	mTextActiveColor(textActiveColor),
+	mButtonIdleColor(buttonIdleColor),
+	mButtonHoverColor(buttonHoverColor),
+	mButtonActiveColor(buttonActiveColor)
 {
 	mShape.setSize(sf::Vector2f(width, height));
 	mShape.setPosition(sf::Vector2f(x, y));
 	
 	mText.setFont(*pFont);
 	mText.setString(text);
-	mText.setFillColor(sf::Color::Black);
-	mText.setCharacterSize(20);
+	mText.setFillColor(mTextIdleColor);
+	mText.setCharacterSize(textSize);
 	mText.setPosition(mShape.getPosition().x + (mShape.getGlobalBounds().width/2.f) - mText.getGlobalBounds().width/2.f,
-		mShape.getPosition().y + (mShape.getGlobalBounds().height/2.f)  - mText.getGlobalBounds().height/2.f);
+		mShape.getPosition().y + (mShape.getGlobalBounds().height/2.f) - mText.getGlobalBounds().height/2.f);
 
-	mShape.setFillColor(mIdleColor);
+	mShape.setFillColor(mButtonIdleColor);
 }
 
 
@@ -52,13 +58,16 @@ void Button::Update(const sf::Vector2f mousePos)
 	switch (mButtonState)
 	{
 	case BTN_IDLE:
-		mShape.setFillColor(mIdleColor);
+		mShape.setFillColor(mButtonIdleColor);
+		mText.setFillColor(mTextIdleColor);
 		break;
 	case BTN_HOVER:
-		mShape.setFillColor(mHoverColor);
+		mShape.setFillColor(mButtonHoverColor);
+		mText.setFillColor(mTextHoverColor);
 		break;
 	case BTN_ACTIVE:
-		mShape.setFillColor(mActiveColor);
+		mShape.setFillColor(mButtonActiveColor);
+		mText.setFillColor(mTextActiveColor);
 		break;
 	default:
 		mShape.setFillColor(sf::Color::Red);

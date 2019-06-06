@@ -13,8 +13,10 @@ class Button
 {
 public:
 	Button() = delete;
-	Button(float x, float y, float width, float height, sf::Font* font, std::string text,
-		sf::Color idleColor, sf::Color hoverColor, sf::Color activeColor);
+	Button(float x, float y, float width, float height,
+		sf::Font* font, std::string text, unsigned int textSize,
+		sf::Color textIdleColor, sf::Color textHoverColor, sf::Color textActiveColor,
+		sf::Color buttonIdleColor, sf::Color buttonHoverColor, sf::Color buttonActiveColor);
 	virtual ~Button();
 
 	void Draw(sf::RenderWindow* window);
@@ -26,9 +28,14 @@ private:
 
 	sf::RectangleShape mShape;
 	sf::Font *pFont;
+
 	sf::Text mText;
-	sf::Color mIdleColor;
-	sf::Color mHoverColor;
-	sf::Color mActiveColor;
+	sf::Color mTextIdleColor;
+	sf::Color mTextHoverColor;
+	sf::Color mTextActiveColor;
+
+	sf::Color mButtonIdleColor;
+	sf::Color mButtonHoverColor;
+	sf::Color mButtonActiveColor;
 };
 

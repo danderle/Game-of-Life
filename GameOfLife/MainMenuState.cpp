@@ -55,7 +55,7 @@ void MainMenuState::Draw(sf::RenderWindow * window)
 {
 	if (!window)
 		window = pWindow;
-	window->clear(sf::Color::Magenta);
+	window->clear();
 	DrawButtons(window);
 }
 
@@ -88,12 +88,18 @@ void MainMenuState::InitFonts()
 
 void MainMenuState::InitButtons()
 {
-	mButtons["GAME_STATE"] = new Button(100, 100, 200, 150, &mFont, "New Game",
-		sf::Color(0, 255, 0), sf::Color(0, 0, 255), sf::Color::Black);
+	mButtons["GAME_STATE"] = new Button(100, 100, 300, 125,
+		&mFont, "New Game", 50,
+		sf::Color(169, 169, 169), sf::Color::White, sf::Color::Green,
+		sf::Color(0, 255, 0, 0), sf::Color(0, 0, 255, 0), sf::Color(0, 0, 255, 0));
 
-	mButtons["SETTINGS_STATE"] = new Button(100, 300, 200, 150, &mFont, "Settings",
-		sf::Color(0, 255, 0), sf::Color(0, 0, 255), sf::Color::Black);
+	mButtons["SETTINGS_STATE"] = new Button(100, 300, 300, 125,
+		&mFont, "Settings", 50,
+		sf::Color(169, 169, 169), sf::Color::White, sf::Color::Green,
+		sf::Color(0, 255, 0, 0), sf::Color(0, 0, 255, 0), sf::Color(0, 0, 255, 0));
 
-	mButtons["EXIT_STATE"] = new Button(100, 500, 200, 150, &mFont, "Quit",
-		sf::Color(100, 100, 100), sf::Color(150, 150, 150), sf::Color::Black);
+	mButtons["EXIT_STATE"] = new Button(100, 500, 300, 125,
+		&mFont, "Quit", 50,
+		sf::Color(169, 169, 169), sf::Color::White, sf::Color::Green,
+		sf::Color(0, 255, 0, 0), sf::Color(0, 0, 255, 0), sf::Color(0, 0, 255, 0));
 }
